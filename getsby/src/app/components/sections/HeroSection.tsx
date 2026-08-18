@@ -34,7 +34,7 @@ export function HeroSection({ slides, brandImage }: HeroSectionProps) {
   };
 
   return (
-    <section className={hero} id="top" aria-roledescription="carousel">
+    <section className={hero} id="top" role="region" aria-label={t("hero.carousel")} aria-roledescription="carousel">
       <div className={hero.el("backdrop")} />
       <div className={hero.el("brand")} aria-hidden="true">
         <img className={hero.el("brand-image")} src={brandImage} alt="" />
@@ -42,20 +42,23 @@ export function HeroSection({ slides, brandImage }: HeroSectionProps) {
       </div>
       <div className={hero.el("viewport")}>
         <div className={hero.el("track")} style={{ transform: `translateX(-${activeSlide * 100}%)` }}>
-          {slides.map((slide, index) => (
-            <article className={heroSlide} key={slide.id} aria-hidden={index !== activeSlide}>
+          {slides.map((slide, index) => {
+            const Heading = index === 0 ? "h1" : "h2";
+            return (
+            <article className={heroSlide} key={slide.id} aria-hidden={index !== activeSlide} aria-roledescription="slide">
               <div className={heroSlide.el("image-wrap")}>
-                <img className={heroSlide.el("image")} src={slide.image} alt="" />
+                <img className={heroSlide.el("image")} src={slide.image} alt={slide.title} />
               </div>
               <div className={heroSlide.el("copy")}>
-                <h1 className={heroSlide.el("title")}>{slide.title}</h1>
+                <Heading className={heroSlide.el("title")}>{slide.title}</Heading>
                 <p className={heroSlide.el("description")}>{slide.description}</p>
                 <StubLink className={textLink}>
                   {t("hero.more")} <FiArrowUpRight className={textLink.el("icon")} aria-hidden="true" />
                 </StubLink>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
       <div className={hero.el("controls")}>

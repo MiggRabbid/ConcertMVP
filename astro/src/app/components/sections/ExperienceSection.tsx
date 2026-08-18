@@ -38,11 +38,11 @@ export function ExperienceSection({ content, assetBase }: ExperienceSectionProps
         <Reveal><h2 className={hallsPanel.el("title")}>{content.halls}</h2></Reveal>
         <div className={hallsPanel.el("grid")}>
           <Reveal className={hallCard}>
-            <img className={hallCard.el("image")} src={`${assetBase}concert-assets/004-dc99272e.webp`} alt="" loading="lazy" />
+            <img className={hallCard.el("image")} src={`${assetBase}concert-assets/004-dc99272e.webp`} alt={content.mainHall} loading="lazy" />
             <StubLink className={hallCard.el("link")}>{content.mainHall}</StubLink>
           </Reveal>
           <Reveal className={hallCard} delay={130}>
-            <img className={hallCard.el("image")} src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt="" loading="lazy" />
+            <img className={hallCard.el("image")} src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt={content.chamberHall} loading="lazy" />
             <StubLink className={hallCard.el("link")}>{content.chamberHall}</StubLink>
           </Reveal>
         </div>

@@ -15,5 +15,5 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "gatsby-config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "gatsby-config.ts", "gatsby-node.ts"]
 }

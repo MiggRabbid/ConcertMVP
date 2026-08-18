@@ -1,10 +1,12 @@
 import type { GatsbyConfig } from "gatsby";
+import { siteConfig } from "./src/app/config/site";
 
 const config: GatsbyConfig = {
   pathPrefix: "/ConcertMVP/getsby",
   siteMetadata: {
-    title: "Концертный центр «Сириус»",
-    description: "Афиша и пространство Концертного центра «Сириус»",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteUrl: siteConfig.siteUrl,
   },
   plugins: [],
 };

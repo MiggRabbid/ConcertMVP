@@ -34,6 +34,12 @@ jobs:
         run: npm ci
         working-directory: astro
 
+      - name: Check Astro
+        run: npm run check
+        working-directory: astro
+        env:
+          ASTRO_TELEMETRY_DISABLED: "1"
+
       - name: Build Astro
         run: npm run build
         working-directory: astro
@@ -45,8 +51,12 @@ jobs:
         run: npm ci
         working-directory: getsby
 
+      - name: Type-check Gatsby
+        run: npm run typecheck
+        working-directory: getsby
+
       - name: Build Gatsby
-        run: npm run build -- --prefix-paths
+        run: env -u DEBUG npm run build -- --prefix-paths
         working-directory: getsby
         env:
           GATSBY_ASSET_BASE: /ConcertMVP/getsby/

@@ -1,23 +1,22 @@
 ---
 import { HomeApp } from "../app/HomeApp";
-import { getFooterMock, getHeaderMock } from "../app/mocks/home";
+import { getFooterMock, getHeaderMock, getMainMock } from "../app/mocks/home";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const assetBase = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const initialHeaderData = getHeaderMock("ru", assetBase);
+const initialMainData = getMainMock("ru", assetBase);
 const initialFooterData = getFooterMock("ru");
+const title = "Концертный центр «Сириус»";
+const description = "Афиша и пространство Концертного центра «Сириус»";
 ---
 
-<!doctype html>
-<html lang="ru" data-asset-base={assetBase}>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Афиша и пространство Концертного центра «Сириус»" />
-    <link rel="icon" href={`${assetBase}concert-assets/008-dc7f22d8.svg`} />
-    <title>Концертный центр «Сириус»</title>
-  </head>
-  <body>
-    <HomeApp initialHeaderData={initialHeaderData} initialFooterData={initialFooterData} assetBase={assetBase} client:load />
-  </body>
-</html>
+<BaseLayout {title} {description} {assetBase}>
+  <HomeApp
+    initialHeaderData={initialHeaderData}
+    initialMainData={initialMainData}
+    initialFooterData={initialFooterData}
+    assetBase={assetBase}
+    client:load
+  />
+</BaseLayout>

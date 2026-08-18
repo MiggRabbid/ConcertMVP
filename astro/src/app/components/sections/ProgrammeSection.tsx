@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import type { ConcertEvent, ProgramCategory } from "../../types/home";
+import { createConcertHref } from "../../api/publicPath";
+import type { ProgramCategory } from "../../types/home";
 import { EventCard } from "../ui/EventCard";
 import { Reveal } from "../ui/Reveal";
 import { bnc } from "../../lib/bem";
@@ -9,7 +10,7 @@ import { cn } from "../../lib/classNames";
 
 interface ProgrammeSectionProps {
   categories: ProgramCategory[];
-  onEventSelect: (event: ConcertEvent) => void;
+  assetBase: string;
 }
 
 const programme = new bnc("programme");
@@ -19,7 +20,7 @@ const eyebrow = new bnc("eyebrow");
 const srOnly = new bnc("sr-only");
 const eventGrid = new bnc("event-grid");
 
-export function ProgrammeSection({ categories, onEventSelect }: ProgrammeSectionProps) {
+export function ProgrammeSection({ categories, assetBase }: ProgrammeSectionProps) {
   const { t } = useTranslation();
   const [activeCategory, setActiveCategory] = useState("all");
   const visibleCategories = useMemo(
@@ -56,7 +57,7 @@ export function ProgrammeSection({ categories, onEventSelect }: ProgrammeSection
           <section className={programmeGroup} id={`category-${category.id}`} key={category.id}>
             <Reveal>
               <header className={programmeGroup.el("banner")}>
-                <img className={programmeGroup.el("image")} src={category.image} alt="" loading="lazy" />
+                <img className={programmeGroup.el("image")} src={category.image} alt={category.title} loading="lazy" />
                 <h3 className={programmeGroup.el("title")}>{category.title}</h3>
                 <p className={programmeGroup.el("period")}>{category.period}</p>
               </header>
@@ -64,7 +65,7 @@ export function ProgrammeSection({ categories, onEventSelect }: ProgrammeSection
             <div className={eventGrid}>
               {category.events.map((event, index) => (
                 <Reveal key={event.id} delay={(index % 3) * 110}>
-                  <EventCard event={event} onSelect={onEventSelect} />
+                  <EventCard event={event} href={createConcertHref(assetBase, category.id, event.id)} />
                 </Reveal>
               ))}
             </div>

@@ -7,19 +7,19 @@ import { bnc } from "../../lib/bem";
 
 interface EventCardProps {
   event: ConcertEvent;
-  onSelect: (event: ConcertEvent) => void;
+  href: string;
 }
 
 const eventCard = new bnc("event-card");
 
-export function EventCard({ event, onSelect }: EventCardProps) {
+export function EventCard({ event, href }: EventCardProps) {
   const { t } = useTranslation();
 
   return (
     <article className={eventCard}>
-      <button className={eventCard.el("button")} type="button" onClick={() => onSelect(event)} aria-label={`${t("programme.eventDetails")}: ${event.title}`}>
+      <a className={eventCard.el("button")} href={href} aria-label={`${t("programme.eventDetails")}: ${event.title}`}>
         <span className={eventCard.el("image")}>
-          <img className={eventCard.el("picture")} src={event.image} alt="" loading="lazy" />
+          <img className={eventCard.el("picture")} src={event.image} alt={event.title} loading="lazy" />
         </span>
         <span className={eventCard.el("copy")}>
           <strong className={eventCard.el("title")}>{event.title}</strong>
@@ -29,7 +29,7 @@ export function EventCard({ event, onSelect }: EventCardProps) {
             <FiArrowUpRight className={eventCard.el("icon")} aria-hidden="true" />
           </span>
         </span>
-      </button>
+      </a>
     </article>
   );
 }

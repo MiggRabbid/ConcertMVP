@@ -1,7 +1,9 @@
 import { mainApi } from "../api/mainApi";
-import type { Locale } from "../types/home";
-import { useApiData } from "./useApiData";
+import type { Locale, MainData } from "../types/home";
+import { useApiData, type InitialApiData } from "./useApiData";
 
 const requestMain = mainApi.getMain.bind(mainApi);
 
-export const useMainData = (locale: Locale) => useApiData(locale, requestMain);
+export const useMainData = (locale: Locale, initialData?: InitialApiData<MainData>) => (
+  useApiData(locale, requestMain, initialData)
+);

@@ -9,6 +9,7 @@ export interface HeroSlide {
 
 export interface ConcertEvent {
   id: string;
+  projectId: string;
   title: string;
   program: string;
   description: string;
@@ -48,6 +49,7 @@ export interface NavigationItem {
 }
 
 export interface HeaderData {
+  homeHref: string;
   location: string;
   logo: string;
   navigation: NavigationItem[];

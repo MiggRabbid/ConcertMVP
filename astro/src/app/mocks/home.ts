@@ -1,6 +1,15 @@
 import type { ConcertEvent, FooterData, HeaderData, Locale, MainData, ProgramCategory } from "../types/home";
 
-const asset = (name: string, assetBase: string) => `${assetBase}concert-assets/${name}`;
+const normalizeBase = (value: string) => value.endsWith("/") ? value : `${value}/`;
+const asset = (name: string, assetBase: string) => `${normalizeBase(assetBase)}concert-assets/${name}`;
+
+const projectIds = [
+  ...Array<string>(6).fill("festival"),
+  ...Array<string>(3).fill("team"),
+  ...Array<string>(3).fill("season"),
+  ...Array<string>(3).fill("masters"),
+  ...Array<string>(3).fill("education"),
+];
 
 const eventImages = [
   "014-ca4eb42c.webp",
@@ -81,6 +90,7 @@ function createEvents(locale: Locale, assetBase: string): ConcertEvent[] {
   const copy = locale === "ru" ? ruEvents : enEvents;
   return copy.map(([title, program], index) => ({
     id: `event-${index + 1}`,
+    projectId: projectIds[index],
     title,
     program,
     description: locale === "ru"
@@ -126,17 +136,19 @@ function createCategories(locale: Locale, events: ConcertEvent[], assetBase: str
 
 export function getHeaderMock(locale: Locale, assetBase = "/"): HeaderData {
   const isRu = locale === "ru";
+  const homeHref = normalizeBase(assetBase);
 
   return {
+    homeHref,
     location: isRu
       ? "Федеральная территория «Сириус»\nулица Чемпионов, 5"
       : "Sirius Federal Territory\n5 Chempionov Street",
     logo: asset("008-dc7f22d8.svg", assetBase),
     navigation: [
-      { id: "programme", label: isRu ? "Афиша" : "Programme", href: "#programme" },
-      { id: "mission", label: isRu ? "О центре" : "About", href: "#mission" },
-      { id: "architecture", label: isRu ? "Архитектура" : "Architecture", href: "#architecture" },
-      { id: "contacts", label: isRu ? "Контакты" : "Contacts", href: "#contacts" },
+      { id: "programme", label: isRu ? "Афиша" : "Programme", href: `${homeHref}#programme` },
+      { id: "mission", label: isRu ? "О центре" : "About", href: `${homeHref}#mission` },
+      { id: "architecture", label: isRu ? "Архитектура" : "Architecture", href: `${homeHref}#architecture` },
+      { id: "contacts", label: isRu ? "Контакты" : "Contacts", href: `${homeHref}#contacts` },
     ],
   };
 }

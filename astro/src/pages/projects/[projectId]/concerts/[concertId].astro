@@ -1,0 +1,53 @@
+---
+import { ConcertPageApp } from "../../../../app/ConcertPageApp";
+import { toIsoDateTime } from "../../../../app/lib/date";
+import { getConcertMocks } from "../../../../app/mocks/concert";
+import { getFooterMock, getHeaderMock } from "../../../../app/mocks/home";
+import type { ConcertPageData } from "../../../../app/types/concert";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  const assetBase = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+  return getConcertMocks("ru", assetBase).map((initialConcertData) => ({
+    params: {
+      projectId: initialConcertData.project.id,
+      concertId: initialConcertData.event.id,
+    },
+    props: { initialConcertData },
+  }));
+}
+
+const { initialConcertData } = Astro.props as { initialConcertData: ConcertPageData };
+const assetBase = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const initialHeaderData = getHeaderMock("ru", assetBase);
+const initialFooterData = getFooterMock("ru");
+const { event } = initialConcertData;
+const title = `${event.title} — Концертный центр «Сириус»`;
+const description = event.description;
+const absoluteImage = new URL(event.image, Astro.site ?? Astro.url).toString();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicEvent",
+  name: event.title,
+  description: event.description,
+  image: absoluteImage,
+  startDate: toIsoDateTime(event.date, event.time),
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  eventStatus: "https://schema.org/EventScheduled",
+  location: {
+    "@type": "Place",
+    name: event.venue,
+    address: initialHeaderData.location.replace("\n", ", "),
+  },
+};
+---
+
+<BaseLayout {title} {description} {assetBase} image={event.image} type="event" {jsonLd}>
+  <ConcertPageApp
+    initialHeaderData={initialHeaderData}
+    initialConcertData={initialConcertData}
+    initialFooterData={initialFooterData}
+    assetBase={assetBase}
+    client:load
+  />
+</BaseLayout>

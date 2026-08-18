@@ -27,7 +27,7 @@ export function MissionSection({ content, assetBase }: MissionSectionProps) {
           </div>
         </Reveal>
         <Reveal className={mission.el("greeting")} delay={140}>
-          <img className={mission.el("greeting-image")} src={`${assetBase}concert-assets/085-c0c24317.webp`} alt="" loading="lazy" />
+          <img className={mission.el("greeting-image")} src={`${assetBase}concert-assets/085-c0c24317.webp`} alt={content.greetingName} loading="lazy" />
           <div className={mission.el("greeting-copy")}>
             <span className={mission.el("greeting-label")}>{content.greetingLabel}</span>
             <strong className={mission.el("greeting-name")}>{content.greetingName}</strong>
@@ -37,7 +37,7 @@ export function MissionSection({ content, assetBase }: MissionSectionProps) {
         </Reveal>
       </div>
       <Reveal className={mission.el("image")}>
-        <img className={mission.el("image-picture")} src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt="" loading="lazy" />
+        <img className={mission.el("image-picture")} src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt={content.title} loading="lazy" />
       </Reveal>
     </section>
   );

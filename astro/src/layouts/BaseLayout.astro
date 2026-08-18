@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  assetBase: string;
+  image?: string;
+  type?: "website" | "event";
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description,
+  assetBase,
+  image,
+  type = "website",
+  jsonLd,
+} = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+const socialImage = image ? new URL(image, canonical.origin) : undefined;
+---
+
+<!doctype html>
+<html lang="ru" data-asset-base={assetBase}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Концертный центр «Сириус»" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content={socialImage ? "summary_large_image" : "summary"} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${assetBase}concert-assets/008-dc7f22d8.svg`} />
+    <title>{title}</title>
+    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

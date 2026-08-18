@@ -2,6 +2,7 @@ import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
 
 import { bnc } from "../../lib/bem";
 import { cn } from "../../lib/classNames";
+import { toIsoDate } from "../../lib/date";
 import type { FooterData } from "../../types/home";
 import { Reveal } from "../ui/Reveal";
 import { StubLink } from "../ui/StubLink";
@@ -51,7 +52,7 @@ export function Footer({ data }: FooterProps) {
             {data.news.map((item) => (
               <article className={infoBlock.el("news-item")} key={item.id}>
                 <StubLink className={infoBlock.el("news-link")}>{item.title}</StubLink>
-                <time className={infoBlock.el("news-date")}>{item.date}</time>
+                <time className={infoBlock.el("news-date")} dateTime={toIsoDate(item.date)}>{item.date}</time>
               </article>
             ))}
           </Reveal>

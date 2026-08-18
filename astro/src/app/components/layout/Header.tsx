@@ -48,11 +48,11 @@ export function Header({ data, locale, onLocaleChange }: HeaderProps) {
           <FiMapPin className={siteHeader.el("address-icon")} aria-hidden="true" />
           <span>{data.location}</span>
         </div>
-        <a className={siteHeader.el("mark")} href="#top" aria-label="Сириус — наверх">
+        <a className={siteHeader.el("mark")} href={data.homeHref} aria-label={t("header.home")}>
           <img className={siteHeader.el("mark-image")} src={data.logo} alt="" />
         </a>
         <div className={siteHeader.el("actions")}>
-          <div className={localeSwitch} aria-label="Language">
+          <div className={localeSwitch} aria-label={t("header.language")}>
             <button className={cn(localeSwitch.el("option"), localeSwitch.el("option").bod("active", locale === "en"))} type="button" onClick={() => onLocaleChange("en")}>EN</button>
             <span>/</span>
             <button className={cn(localeSwitch.el("option"), localeSwitch.el("option").bod("active", locale === "ru"))} type="button" onClick={() => onLocaleChange("ru")}>RU</button>
@@ -71,7 +71,7 @@ export function Header({ data, locale, onLocaleChange }: HeaderProps) {
 
       <div className={cn(menuOverlay, menuOverlay.bod("open", menuOpen))} aria-hidden={!menuOpen}>
         <div className={menuOverlay.el("panel")}>
-          <nav className={menuOverlay.el("navigation")} aria-label="Основная навигация">
+          <nav className={menuOverlay.el("navigation")} aria-label={t("header.navigation")}>
             {data.navigation.map((item, index) => (
               <a
                 key={item.id}
