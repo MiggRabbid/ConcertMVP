@@ -8,11 +8,12 @@ import { bnc } from "../../lib/bem";
 
 interface MissionSectionProps {
   content: MissionContent;
+  assetBase: string;
 }
 
 const mission = new bnc("mission");
 
-export function MissionSection({ content }: MissionSectionProps) {
+export function MissionSection({ content, assetBase }: MissionSectionProps) {
   const { t } = useTranslation();
 
   return (
@@ -25,7 +26,7 @@ export function MissionSection({ content }: MissionSectionProps) {
           </div>
         </Reveal>
         <Reveal className={mission.el("greeting")} delay={140}>
-          <img className={mission.el("greeting-image")} src="/concert-assets/085-c0c24317.webp" alt="" loading="lazy" />
+          <img className={mission.el("greeting-image")} src={`${assetBase}concert-assets/085-c0c24317.webp`} alt="" loading="lazy" />
           <div className={mission.el("greeting-copy")}>
             <span className={mission.el("greeting-label")}>{content.greetingLabel}</span>
             <strong className={mission.el("greeting-name")}>{content.greetingName}</strong>
@@ -35,7 +36,7 @@ export function MissionSection({ content }: MissionSectionProps) {
         </Reveal>
       </div>
       <Reveal className={mission.el("image")}>
-        <img className={mission.el("image-picture")} src="/concert-assets/084-f97dddcf.webp" alt="" loading="lazy" />
+        <img className={mission.el("image-picture")} src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt="" loading="lazy" />
       </Reveal>
     </section>
   );

@@ -1,0 +1,79 @@
+name: Deploy both MVPs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            astro/package-lock.json
+            getsby/package-lock.json
+
+      - name: Install Astro dependencies
+        run: npm ci
+        working-directory: astro
+
+      - name: Build Astro
+        run: npm run build
+        working-directory: astro
+        env:
+          PUBLIC_BASE_PATH: /ConcertMVP/astro
+          ASTRO_TELEMETRY_DISABLED: "1"
+
+      - name: Install Gatsby dependencies
+        run: npm ci
+        working-directory: getsby
+
+      - name: Build Gatsby
+        run: npm run build -- --prefix-paths
+        working-directory: getsby
+        env:
+          GATSBY_ASSET_BASE: /ConcertMVP/getsby/
+          GATSBY_TELEMETRY_DISABLED: "1"
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p pages-artifact/astro pages-artifact/getsby
+          cp -R pages-root/. pages-artifact/
+          cp -R astro/dist/. pages-artifact/astro/
+          cp -R getsby/public/. pages-artifact/getsby/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-artifact
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

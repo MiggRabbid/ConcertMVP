@@ -12,7 +12,8 @@ export const httpClient = axios.create({
 
 const mock = new AxiosMockAdapter(httpClient, { delayResponse: 420 });
 const getLocale = (value: unknown): Locale => value === "en" ? "en" : "ru";
+const getAssetBase = (value: unknown): string => typeof value === "string" ? value : "/";
 
-mock.onGet("/header").reply((config) => [200, getHeaderMock(getLocale(config.params?.locale))]);
-mock.onGet("/main").reply((config) => [200, getMainMock(getLocale(config.params?.locale))]);
+mock.onGet("/header").reply((config) => [200, getHeaderMock(getLocale(config.params?.locale), getAssetBase(config.params?.assetBase))]);
+mock.onGet("/main").reply((config) => [200, getMainMock(getLocale(config.params?.locale), getAssetBase(config.params?.assetBase))]);
 mock.onGet("/footer").reply((config) => [200, getFooterMock(getLocale(config.params?.locale))]);

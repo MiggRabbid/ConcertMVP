@@ -9,13 +9,14 @@ import { cn } from "../../lib/classNames";
 
 interface HeroSectionProps {
   slides: HeroSlide[];
+  brandImage: string;
 }
 
 const hero = new bnc("hero");
 const heroSlide = new bnc("hero-slide");
 const textLink = new bnc("text-link");
 
-export function HeroSection({ slides }: HeroSectionProps) {
+export function HeroSection({ slides, brandImage }: HeroSectionProps) {
   const { t } = useTranslation();
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -35,7 +36,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
     <section className={hero} id="top" aria-roledescription="carousel">
       <div className={hero.el("backdrop")} />
       <div className={hero.el("brand")} aria-hidden="true">
-        <img className={hero.el("brand-image")} src="/concert-assets/008-dc7f22d8.svg" alt="" />
+        <img className={hero.el("brand-image")} src={brandImage} alt="" />
         <span className={hero.el("brand-copy")}><b className={hero.el("brand-title")}>Сириус</b><small className={hero.el("brand-subtitle")}>концертный<br />центр</small></span>
       </div>
       <div className={hero.el("viewport")}>

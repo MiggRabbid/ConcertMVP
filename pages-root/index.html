@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ConcertMVP</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { display: grid; min-height: 100vh; margin: 0; place-items: center; color: #fff; background: #050505; font-family: Arial, sans-serif; }
+      main { width: min(720px, calc(100% - 40px)); }
+      h1 { margin: 0 0 40px; font-size: clamp(42px, 8vw, 88px); font-weight: 400; }
+      nav { display: grid; gap: 12px; }
+      a { display: flex; min-height: 76px; align-items: center; justify-content: space-between; padding: 20px 24px; border: 1px solid #555; color: inherit; text-decoration: none; transition: 180ms ease; }
+      a:hover { color: #050505; background: #fff; }
+      span { font-size: 20px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>ConcertMVP</h1>
+      <nav aria-label="Выбор реализации">
+        <a href="./astro/"><span>Astro + React</span><span aria-hidden="true">→</span></a>
+        <a href="./getsby/"><span>Gatsby + React</span><span aria-hidden="true">→</span></a>
+      </nav>
+    </main>
+  </body>
+</html>

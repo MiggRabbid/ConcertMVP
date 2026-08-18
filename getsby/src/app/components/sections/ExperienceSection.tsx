@@ -10,7 +10,12 @@ const acousticsPanel = new bnc("acoustics-panel");
 const hallsPanel = new bnc("halls-panel");
 const hallCard = new bnc("hall-card");
 
-export function ExperienceSection({ content }: { content: ExperienceContent }) {
+interface ExperienceSectionProps {
+  content: ExperienceContent;
+  assetBase: string;
+}
+
+export function ExperienceSection({ content, assetBase }: ExperienceSectionProps) {
   return (
     <section className={experience} id="architecture">
       <div className={architecturePanel}>
@@ -34,11 +39,11 @@ export function ExperienceSection({ content }: { content: ExperienceContent }) {
         <Reveal><h2 className={hallsPanel.el("title")}>{content.halls}</h2></Reveal>
         <div className={hallsPanel.el("grid")}>
           <Reveal className={hallCard}>
-            <img className={hallCard.el("image")} src="/concert-assets/004-dc99272e.webp" alt="" loading="lazy" />
+            <img className={hallCard.el("image")} src={`${assetBase}concert-assets/004-dc99272e.webp`} alt="" loading="lazy" />
             <StubLink className={hallCard.el("link")}>{content.mainHall}</StubLink>
           </Reveal>
           <Reveal className={hallCard} delay={130}>
-            <img className={hallCard.el("image")} src="/concert-assets/084-f97dddcf.webp" alt="" loading="lazy" />
+            <img className={hallCard.el("image")} src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt="" loading="lazy" />
             <StubLink className={hallCard.el("link")}>{content.chamberHall}</StubLink>
           </Reveal>
         </div>

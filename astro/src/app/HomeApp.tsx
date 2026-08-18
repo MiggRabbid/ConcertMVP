@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Footer } from "./components/layout/Footer";
@@ -26,15 +26,20 @@ const primaryButton = new bnc("primary-button");
 interface HomeAppProps {
   initialHeaderData: HeaderData;
   initialFooterData: FooterData;
+  assetBase: string;
 }
 
-export function HomeApp({ initialHeaderData, initialFooterData }: HomeAppProps) {
+export function HomeApp({ initialHeaderData, initialFooterData, assetBase }: HomeAppProps) {
   const { t } = useTranslation();
   const [locale, setLocale] = useState<Locale>("ru");
   const [selectedEvent, setSelectedEvent] = useState<ConcertEvent | null>(null);
   const headerRequest = useHeaderData(locale, { data: initialHeaderData, locale: "ru" });
   const mainRequest = useMainData(locale);
   const footerRequest = useFooterData(locale, { data: initialFooterData, locale: "ru" });
+  const appStyles = {
+    "--concert-hall-image": `url("${assetBase}concert-assets/004-dc99272e.webp")`,
+    "--concert-architecture-image": `url("${assetBase}concert-assets/086-be082844.webp")`,
+  } as CSSProperties;
 
   useEffect(() => {
     const savedLocale = window.localStorage.getItem(savedLocaleKey);
@@ -55,7 +60,8 @@ export function HomeApp({ initialHeaderData, initialFooterData }: HomeAppProps) 
   }, [footerRequest.reload, headerRequest.reload, mainRequest.reload]);
 
   return (
-    <div className={concertApp}>
+    <div className={concertApp} style={appStyles}>
+      <style dangerouslySetInnerHTML={{ __html: createFontFaceCss(assetBase) }} />
       {headerRequest.data && (
         <>
           <Header data={headerRequest.data} locale={locale} onLocaleChange={setLocale} />
@@ -70,15 +76,15 @@ export function HomeApp({ initialHeaderData, initialFooterData }: HomeAppProps) 
         </main>
       ) : !mainRequest.data ? (
         <main className={requestState} aria-live="polite">
-          <span className={requestState.el("mark")}><img src="/concert-assets/008-dc7f22d8.svg" alt="" /></span>
+          <span className={requestState.el("mark")}><img src={initialHeaderData.logo} alt="" /></span>
           <p className={requestState.el("message")}>{t("common.loading")}</p>
         </main>
       ) : (
         <main>
-          <HeroSection slides={mainRequest.data.heroSlides} />
+          <HeroSection slides={mainRequest.data.heroSlides} brandImage={headerRequest.data?.logo ?? initialHeaderData.logo} />
           <ProgrammeSection categories={mainRequest.data.categories} onEventSelect={setSelectedEvent} />
-          <MissionSection content={mainRequest.data.mission} />
-          <ExperienceSection content={mainRequest.data.experience} />
+          <MissionSection content={mainRequest.data.mission} assetBase={assetBase} />
+          <ExperienceSection content={mainRequest.data.experience} assetBase={assetBase} />
         </main>
       )}
 
@@ -86,4 +92,13 @@ export function HomeApp({ initialHeaderData, initialFooterData }: HomeAppProps) 
       <EventModal event={selectedEvent} onClose={closeEvent} />
     </div>
   );
+}
+
+function createFontFaceCss(assetBase: string): string {
+  return `
+    @font-face { font-family: "Montserrat"; font-style: normal; font-weight: 300 700; font-display: swap; src: url("${assetBase}concert-fonts/02.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "Montserrat"; font-style: normal; font-weight: 300 700; font-display: swap; src: url("${assetBase}concert-fonts/05.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191-2193, U+2212, U+2215; }
+    @font-face { font-family: "Tenor Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("${assetBase}concert-fonts/06.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "Tenor Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("${assetBase}concert-fonts/08.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191-2193, U+2212, U+2215; }
+  `;
 }

@@ -1,6 +1,6 @@
 import type { ConcertEvent, FooterData, HeaderData, Locale, MainData, ProgramCategory } from "../types/home";
 
-const asset = (name: string) => `/concert-assets/${name}`;
+const asset = (name: string, assetBase: string) => `${assetBase}concert-assets/${name}`;
 
 const eventImages = [
   "014-ca4eb42c.webp",
@@ -77,7 +77,7 @@ const eventMeta = [
   ["29.11.2026", "15:00", "Камерный зал"], ["12.12.2026", "19:00", "Главная сцена"],
 ] as const;
 
-function createEvents(locale: Locale): ConcertEvent[] {
+function createEvents(locale: Locale, assetBase: string): ConcertEvent[] {
   const copy = locale === "ru" ? ruEvents : enEvents;
   return copy.map(([title, program], index) => ({
     id: `event-${index + 1}`,
@@ -90,11 +90,11 @@ function createEvents(locale: Locale): ConcertEvent[] {
     date: eventMeta[index][0],
     time: eventMeta[index][1],
     age: "6+",
-    image: asset(eventImages[index]),
+    image: asset(eventImages[index], assetBase),
   }));
 }
 
-function createCategories(locale: Locale, events: ConcertEvent[]): ProgramCategory[] {
+function createCategories(locale: Locale, events: ConcertEvent[], assetBase: string): ProgramCategory[] {
   const ru = [
     ["Международный фестиваль искусств для детей и молодёжи «Сириус — Роза Хутор»", "1.06—31.08 2026"],
     ["Музыкальная сборная России", "3.09—18.11 2026"],
@@ -119,19 +119,19 @@ function createCategories(locale: Locale, events: ConcertEvent[]): ProgramCatego
     id: ["festival", "team", "season", "masters", "education"][index],
     title,
     period,
-    image: asset(categoryImages[index]),
+    image: asset(categoryImages[index], assetBase),
     events: events.slice(...ranges[index]),
   }));
 }
 
-export function getHeaderMock(locale: Locale): HeaderData {
+export function getHeaderMock(locale: Locale, assetBase = "/"): HeaderData {
   const isRu = locale === "ru";
 
   return {
     location: isRu
       ? "Федеральная территория «Сириус»\nулица Чемпионов, 5"
       : "Sirius Federal Territory\n5 Chempionov Street",
-    logo: asset("008-dc7f22d8.svg"),
+    logo: asset("008-dc7f22d8.svg", assetBase),
     navigation: [
       { id: "programme", label: isRu ? "Афиша" : "Programme", href: "#programme" },
       { id: "mission", label: isRu ? "О центре" : "About", href: "#mission" },
@@ -141,8 +141,8 @@ export function getHeaderMock(locale: Locale): HeaderData {
   };
 }
 
-export function getMainMock(locale: Locale): MainData {
-  const events = createEvents(locale);
+export function getMainMock(locale: Locale, assetBase = "/"): MainData {
+  const events = createEvents(locale, assetBase);
   const isRu = locale === "ru";
 
   return {
@@ -153,7 +153,7 @@ export function getMainMock(locale: Locale): MainData {
         description: isRu
           ? "Четыре вечера, восемь оркестров и сотни молодых музыкантов из разных стран. Финальный концерт объединит два коллектива, напрямую связанных с инициативами Юрия Башмета."
           : "Four evenings, eight orchestras and hundreds of young musicians from around the world. The finale brings together two ensembles connected with Yuri Bashmet's initiatives.",
-        image: asset("009-9125b792.webp"),
+        image: asset("009-9125b792.webp", assetBase),
       },
       {
         id: "architecture",
@@ -161,7 +161,7 @@ export function getMainMock(locale: Locale): MainData {
         description: isRu
           ? "Органика форм и объёмов Концертного центра вторит горному ландшафту и создаёт новое культурное пространство."
           : "The organic forms and volumes of the Concert Centre echo the mountain landscape and create a new cultural space.",
-        image: asset("010-ec0e4158.webp"),
+        image: asset("010-ec0e4158.webp", assetBase),
       },
       {
         id: "academy",
@@ -169,10 +169,10 @@ export function getMainMock(locale: Locale): MainData {
         description: isRu
           ? "На одной сцене встречаются признанные мастера и молодые исполнители. Здесь рождаются новые фестивальные традиции."
           : "Acclaimed masters and young performers meet on one stage, creating new festival traditions.",
-        image: asset("013-9a9dd0a9.webp"),
+        image: asset("013-9a9dd0a9.webp", assetBase),
       },
     ],
-    categories: createCategories(locale, events),
+    categories: createCategories(locale, events, assetBase),
     mission: {
       title: isRu ? "Большая миссия" : "A Greater Mission",
       paragraphs: isRu

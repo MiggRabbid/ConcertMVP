@@ -3,6 +3,8 @@ import { mkdir } from "node:fs/promises";
 import { chromium, devices } from "/root/.npm/_npx/705bc6b22212b352/node_modules/playwright/index.mjs";
 
 const output = "reference-assets/implementation-qa";
+const astroUrl = process.env.QA_ASTRO_URL ?? "http://127.0.0.1:4321/";
+const gatsbyUrl = process.env.QA_GATSBY_URL ?? "http://127.0.0.1:9000/";
 await mkdir(output, { recursive: true });
 
 const browser = await chromium.launch({ channel: "chrome", headless: true });
@@ -184,12 +186,12 @@ async function runMobile(name, url) {
 
 const result = {
   mobile: [
-    await runMobile("astro", "http://127.0.0.1:4321/"),
-    await runMobile("gatsby", "http://127.0.0.1:9000/"),
+    await runMobile("astro", astroUrl),
+    await runMobile("gatsby", gatsbyUrl),
   ],
   desktop: [
-    await runDesktop("astro", "http://127.0.0.1:4321/"),
-    await runDesktop("gatsby", "http://127.0.0.1:9000/"),
+    await runDesktop("astro", astroUrl),
+    await runDesktop("gatsby", gatsbyUrl),
   ],
 };
 
