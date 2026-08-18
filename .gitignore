@@ -1,0 +1,9 @@
+**/node_modules/
+/astro/dist/
+/astro/.astro/
+/getsby/public/
+/getsby/.cache/
+.env
+.env.*
+!.env.example
+.DS_Store
