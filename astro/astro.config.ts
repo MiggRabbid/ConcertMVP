@@ -1,10 +1,13 @@
 import { defineConfig } from "astro/config";
-import react from "@astrojs/react";
 
 const base = process.env.PUBLIC_BASE_PATH ?? "/";
 
 export default defineConfig({
   site: "https://miggrabbid.github.io",
   base,
-  integrations: [react()],
+  i18n: {
+    defaultLocale: "ru",
+    locales: ["ru", "en"],
+    routing: { prefixDefaultLocale: false },
+  },
 });

@@ -1,0 +1,63 @@
+---
+import type { Messages } from "../app/i18n/messages";
+import type { FooterData, HeaderData, Locale } from "../app/types/home";
+import type { LanguageLinks } from "../app/types/layout";
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import SocialRail from "../components/layout/SocialRail.astro";
+
+interface Props {
+  assetBase: string;
+  header: HeaderData;
+  footer: FooterData;
+  locale: Locale;
+  languageLinks: LanguageLinks;
+  messages: Messages;
+}
+
+const { assetBase, header, footer, locale, languageLinks, messages } = Astro.props;
+const appStyle = [
+  `--concert-hall-image: url("${assetBase}concert-assets/004-dc99272e.webp")`,
+  `--concert-architecture-image: url("${assetBase}concert-assets/086-be082844.webp")`,
+].join("; ");
+---
+
+<div class="concert-app" style={appStyle}>
+  <Header data={header} {locale} {languageLinks} {messages} />
+  <SocialRail label={messages.common.social} />
+  <slot />
+  <Footer data={footer} />
+</div>
+
+<script>
+  const revealElements = document.querySelectorAll<HTMLElement>(".reveal:not([data-reveal-ready])");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    revealElements.forEach((element) => {
+      element.dataset.revealReady = "true";
+      element.dataset.visible = "true";
+    });
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const element = entry.target as HTMLElement;
+          element.dataset.visible = "true";
+          observer.unobserve(element);
+        });
+      },
+      { threshold: 0.13, rootMargin: "0px 0px -8%" },
+    );
+
+    revealElements.forEach((element) => {
+      element.dataset.revealReady = "true";
+      observer.observe(element);
+    });
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>("[data-stub-link]").forEach((link) => {
+    link.addEventListener("click", (event) => event.preventDefault());
+  });
+</script>

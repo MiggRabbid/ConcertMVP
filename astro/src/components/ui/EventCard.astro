@@ -1,0 +1,28 @@
+---
+import type { ConcertEvent } from "../../app/types/home";
+import Icon from "./Icon.astro";
+
+interface Props {
+  event: ConcertEvent;
+  href: string;
+  detailsLabel: string;
+}
+
+const { event, href, detailsLabel } = Astro.props;
+---
+
+<article class="event-card">
+  <a class="event-card__button" href={href} aria-label={`${detailsLabel}: ${event.title}`}>
+    <span class="event-card__image">
+      <img class="event-card__picture" src={event.image} alt={event.title} loading="lazy" />
+    </span>
+    <span class="event-card__copy">
+      <strong class="event-card__title">{event.title}</strong>
+      <small class="event-card__program">{event.program}</small>
+      <span class="event-card__meta">
+        <span class="event-card__details">{detailsLabel}</span>
+        <Icon name="arrow-up-right" class="event-card__icon" />
+      </span>
+    </span>
+  </a>
+</article>

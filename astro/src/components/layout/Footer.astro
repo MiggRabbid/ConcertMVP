@@ -1,0 +1,74 @@
+---
+import { toIsoDate } from "../../app/lib/date";
+import type { FooterData } from "../../app/types/home";
+import Icon from "../ui/Icon.astro";
+import Reveal from "../ui/Reveal.astro";
+
+interface Props {
+  data: FooterData;
+}
+
+const { data } = Astro.props;
+---
+
+<footer class="site-footer" id="contacts">
+  <div class="site-footer__sheet">
+    <div class="site-footer__grid">
+      <Reveal class="info-block">
+        <h2 class="info-block__title">{data.contacts.title}</h2>
+        <p class="contact-row">
+          <Icon name="map-pin" class="contact-row__icon" />
+          <a class="contact-row__link" href="#" data-stub-link>{data.contacts.address}</a>
+        </p>
+        <h3 class="info-block__subtitle">{data.contacts.ticketOfficeLabel}</h3>
+        <p class="contact-row">
+          <Icon name="phone" class="contact-row__icon" />
+          <a class="contact-row__link" href={`tel:${data.contacts.ticketPhone.replace(/[^+\d]/g, "")}`}>{data.contacts.ticketPhone}</a>
+        </p>
+        <div class="social-inline">
+          {data.contacts.socials.map((social) => <span class="social-inline__item">{social}</span>)}
+        </div>
+      </Reveal>
+
+      <Reveal class="info-block" delay={100}>
+        <h2 class="info-block__title">{data.additional.title}</h2>
+        {data.additional.links.map((label) => <a class="info-block__link" href="#" data-stub-link>{label}</a>)}
+      </Reveal>
+
+      <Reveal class="info-block">
+        <h2 class="info-block__title">{data.council.title}</h2>
+        <p class="info-block__text">{data.council.text}</p>
+        <a class="info-block__link info-block__link-muted" href="#" data-stub-link>{data.council.membersLabel}</a>
+        <h3 class="info-block__subtitle">{data.partnership.title}</h3>
+        <p class="contact-row">
+          <Icon name="mail" class="contact-row__icon" />
+          <a class="contact-row__link" href={`mailto:${data.partnership.email}`}>{data.partnership.email}</a>
+        </p>
+        <p class="info-block__text info-block__text-muted">{data.partnership.audienceLabel}</p>
+        <p class="contact-row">
+          <Icon name="phone" class="contact-row__icon" />
+          <a class="contact-row__link" href={`tel:${data.partnership.phone.replace(/[^+\d]/g, "")}`}>{data.partnership.phone}</a>
+        </p>
+        <p class="contact-row">
+          <Icon name="mail" class="contact-row__icon" />
+          <a class="contact-row__link" href={`mailto:${data.partnership.audienceEmail}`}>{data.partnership.audienceEmail}</a>
+        </p>
+      </Reveal>
+
+      <Reveal class="info-block info-block-news" delay={100}>
+        <h2 class="info-block__title">{data.newsTitle}</h2>
+        {data.news.map((item) => (
+          <article class="info-block__news-item">
+            <a class="info-block__news-link" href="#" data-stub-link>{item.title}</a>
+            <time class="info-block__news-date" datetime={toIsoDate(item.date)}>{item.date}</time>
+          </article>
+        ))}
+      </Reveal>
+    </div>
+
+    <Reveal class="site-footer__finale">
+      <p class="site-footer__finale-title">{data.finale.title}</p>
+      <small class="site-footer__copyright">{data.finale.year} © {data.finale.rights}</small>
+    </Reveal>
+  </div>
+</footer>

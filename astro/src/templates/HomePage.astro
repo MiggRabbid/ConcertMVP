@@ -1,0 +1,38 @@
+---
+import type { FooterData, HeaderData, Locale, MainData } from "../app/types/home";
+import type { LanguageLinks } from "../app/types/layout";
+import { getMessages } from "../app/i18n/messages";
+import ExperienceSection from "../components/sections/ExperienceSection.astro";
+import HeroSection from "../components/sections/HeroSection.astro";
+import MissionSection from "../components/sections/MissionSection.astro";
+import ProgrammeSection from "../components/sections/ProgrammeSection.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+interface Props {
+  locale: Locale;
+  assetBase: string;
+  header: HeaderData;
+  main: MainData;
+  footer: FooterData;
+  languageLinks: LanguageLinks;
+}
+
+const { locale, assetBase, header, main, footer, languageLinks } = Astro.props;
+const messages = getMessages(locale);
+const title = locale === "ru" ? "Концертный центр «Сириус»" : "Sirius Concert Centre";
+const description = locale === "ru"
+  ? "Афиша и пространство Концертного центра «Сириус»"
+  : "Programme and spaces of the Sirius Concert Centre";
+---
+
+<BaseLayout {title} {description} {assetBase} lang={locale} {languageLinks} siteName={title}>
+  <SiteLayout {assetBase} {header} {footer} {locale} {languageLinks} {messages}>
+    <main>
+      <HeroSection slides={main.heroSlides} brandImage={header.logo} {messages} />
+      <ProgrammeSection categories={main.categories} {assetBase} {locale} {messages} />
+      <MissionSection content={main.mission} {assetBase} {messages} />
+      <ExperienceSection content={main.experience} {assetBase} />
+    </main>
+  </SiteLayout>
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import type { Messages } from "../../app/i18n/messages";
+import type { MissionContent } from "../../app/types/home";
+import Icon from "../ui/Icon.astro";
+import Reveal from "../ui/Reveal.astro";
+
+interface Props {
+  content: MissionContent;
+  assetBase: string;
+  messages: Messages;
+}
+
+const { content, assetBase, messages } = Astro.props;
+---
+
+<section class="mission" id="mission">
+  <div class="mission__copy">
+    <Reveal>
+      <h2 class="mission__title">{content.title}</h2>
+      <div class="mission__lead">
+        {content.paragraphs.map((paragraph) => <p class="mission__paragraph">{paragraph}</p>)}
+      </div>
+    </Reveal>
+    <Reveal class="mission__greeting" delay={140}>
+      <img class="mission__greeting-image" src={`${assetBase}concert-assets/085-c0c24317.webp`} alt={content.greetingName} loading="lazy" />
+      <div class="mission__greeting-copy">
+        <span class="mission__greeting-label">{content.greetingLabel}</span>
+        <strong class="mission__greeting-name">{content.greetingName}</strong>
+        <small class="mission__greeting-role">{content.greetingRole}</small>
+        <a class="mission__greeting-link" href="#" data-stub-link>
+          {messages.mission.read} <Icon name="arrow-up-right" />
+        </a>
+      </div>
+    </Reveal>
+  </div>
+  <Reveal class="mission__image">
+    <img class="mission__image-picture" src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt={content.title} loading="lazy" />
+  </Reveal>
+</section>

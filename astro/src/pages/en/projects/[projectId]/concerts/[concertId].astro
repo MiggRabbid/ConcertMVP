@@ -1,13 +1,13 @@
 ---
-import { createLanguageLinks } from "../../../../app/lib/paths";
-import { getConcertPages } from "../../../../app/data/concerts";
-import { getFooterData, getHeaderData } from "../../../../app/data/site";
-import type { ConcertPageData } from "../../../../app/types/concert";
-import ConcertPage from "../../../../templates/ConcertPage.astro";
+import { createLanguageLinks } from "../../../../../app/lib/paths";
+import { getConcertPages } from "../../../../../app/data/concerts";
+import { getFooterData, getHeaderData } from "../../../../../app/data/site";
+import type { ConcertPageData } from "../../../../../app/types/concert";
+import ConcertPage from "../../../../../templates/ConcertPage.astro";
 
 export function getStaticPaths() {
   const assetBase = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
-  return getConcertPages("ru", assetBase).map((initialConcertData) => ({
+  return getConcertPages("en", assetBase).map((initialConcertData) => ({
     params: {
       projectId: initialConcertData.project.id,
       concertId: initialConcertData.event.id,
@@ -18,7 +18,7 @@ export function getStaticPaths() {
 
 const { initialConcertData } = Astro.props as { initialConcertData: ConcertPageData };
 const assetBase = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
-const locale = "ru";
+const locale = "en";
 const header = getHeaderData(locale, assetBase);
 const footer = getFooterData(locale);
 const concertPath = `/projects/${initialConcertData.project.id}/concerts/${initialConcertData.event.id}`;

@@ -1,27 +1,38 @@
 import React from "react";
 import type { HeadFC, PageProps } from "gatsby";
 
-import { ConcertPageApp } from "../app/ConcertPageApp";
-import { siteConfig } from "../app/config/site";
-import { toIsoDateTime } from "../app/lib/date";
-import type { ConcertPageContext } from "../app/types/page";
+import { SiteLayout } from "../components/layout/SiteLayout";
+import { Seo } from "../components/seo/Seo";
+import { ConcertDetail } from "../components/sections/ConcertDetail";
+import { siteConfig } from "../config/site";
+import { getMessages } from "../i18n/messages";
+import { toIsoDateTime } from "../lib/date";
+import type { ConcertPageContext } from "../types/page";
 
 export default function ConcertPage({ pageContext }: PageProps<object, ConcertPageContext>) {
+  const { assetBase, locale, headerData, concertData, footerData, languageLinks } = pageContext;
+  const messages = getMessages(locale);
+
   return (
-    <ConcertPageApp
-      initialHeaderData={pageContext.initialHeaderData}
-      initialConcertData={pageContext.initialConcertData}
-      initialFooterData={pageContext.initialFooterData}
-      assetBase={pageContext.assetBase}
-    />
+    <SiteLayout
+      assetBase={assetBase}
+      header={headerData}
+      footer={footerData}
+      locale={locale}
+      languageLinks={languageLinks}
+      messages={messages}
+    >
+      <ConcertDetail data={concertData} homeHref={headerData.homeHref} messages={messages} />
+    </SiteLayout>
   );
 }
 
 export const Head: HeadFC<object, ConcertPageContext> = ({ pageContext }) => {
-  const { event } = pageContext.initialConcertData;
-  const title = `${event.title} — Концертный центр «Сириус»`;
+  const { event } = pageContext.concertData;
+  const siteName = pageContext.locale === "ru" ? siteConfig.name : "Sirius Concert Centre";
+  const title = `${event.title} — ${siteName}`;
   const canonical = new URL(pageContext.pagePath.replace(/^\//, ""), siteConfig.siteUrl).toString();
-  const socialImage = new URL(event.image, siteConfig.siteUrl).toString();
+  const socialImage = new URL(event.image, new URL(siteConfig.siteUrl).origin).toString();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "MusicEvent",
@@ -34,26 +45,8 @@ export const Head: HeadFC<object, ConcertPageContext> = ({ pageContext }) => {
     location: {
       "@type": "Place",
       name: event.venue,
-      address: pageContext.initialHeaderData.location.replace("\n", ", "),
+      address: pageContext.headerData.location.replace("\n", ", "),
     },
   };
-  return (
-    <>
-      <html lang="ru" data-asset-base={pageContext.assetBase} />
-      <title>{title}</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#000000" />
-      <meta name="description" content={event.description} />
-      <meta property="og:type" content="event" />
-      <meta property="og:site_name" content={siteConfig.name} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={event.description} />
-      <meta property="og:url" content={canonical} />
-      <meta property="og:image" content={socialImage} />
-      <meta name="twitter:card" content="summary_large_image" />
-      <link rel="canonical" href={canonical} />
-      <link rel="icon" href={`${pageContext.assetBase}concert-assets/008-dc7f22d8.svg`} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    </>
-  );
+  return <Seo {...pageContext} title={title} description={event.description} canonical={canonical} type="event" image={socialImage} jsonLd={jsonLd} />;
 };

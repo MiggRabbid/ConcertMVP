@@ -1,5 +1,5 @@
 import type { GatsbyConfig } from "gatsby";
-import { siteConfig } from "./src/app/config/site";
+import { siteConfig } from "./src/config/site";
 
 const config: GatsbyConfig = {
   pathPrefix: "/ConcertMVP/getsby",

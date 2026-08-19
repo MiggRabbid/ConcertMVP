@@ -1,0 +1,18 @@
+---
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<aside class="social-rail" aria-label={label}>
+  <a class="social-rail__link" href="#" aria-label="Telegram" data-stub-link>
+    <Icon name="telegram" class="social-rail__icon" />
+  </a>
+  <a class="social-rail__link" href="#" aria-label="VK" data-stub-link>
+    <Icon name="vk" class="social-rail__icon" />
+  </a>
+</aside>

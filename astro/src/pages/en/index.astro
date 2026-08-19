@@ -1,10 +1,10 @@
 ---
-import { createLanguageLinks } from "../app/lib/paths";
-import { getFooterData, getHeaderData, getMainData } from "../app/data/site";
-import HomePage from "../templates/HomePage.astro";
+import { createLanguageLinks } from "../../app/lib/paths";
+import { getFooterData, getHeaderData, getMainData } from "../../app/data/site";
+import HomePage from "../../templates/HomePage.astro";
 
 const assetBase = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
-const locale = "ru";
+const locale = "en";
 const header = getHeaderData(locale, assetBase);
 const main = getMainData(locale, assetBase);
 const footer = getFooterData(locale);

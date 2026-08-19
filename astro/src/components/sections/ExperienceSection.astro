@@ -1,0 +1,44 @@
+---
+import type { ExperienceContent } from "../../app/types/home";
+import Reveal from "../ui/Reveal.astro";
+
+interface Props {
+  content: ExperienceContent;
+  assetBase: string;
+}
+
+const { content, assetBase } = Astro.props;
+---
+
+<section class="experience" id="architecture">
+  <div class="architecture-panel">
+    <div class="architecture-panel__scrim"></div>
+    <Reveal class="architecture-panel__copy">
+      <p class="architecture-panel__eyebrow">{content.architecturePrefix}</p>
+      <h2 class="architecture-panel__title">{content.architecture}</h2>
+      <span class="architecture-panel__description">{content.architectureText}</span>
+    </Reveal>
+  </div>
+
+  <div class="acoustics-panel">
+    <Reveal>
+      <p class="acoustics-panel__eyebrow">{content.acousticsPrefix}</p>
+      <h2 class="acoustics-panel__title">{content.acoustics}</h2>
+      <span class="acoustics-panel__description">{content.acousticsText}</span>
+    </Reveal>
+  </div>
+
+  <div class="halls-panel">
+    <Reveal><h2 class="halls-panel__title">{content.halls}</h2></Reveal>
+    <div class="halls-panel__grid">
+      <Reveal class="hall-card">
+        <img class="hall-card__image" src={`${assetBase}concert-assets/004-dc99272e.webp`} alt={content.mainHall} loading="lazy" />
+        <a class="hall-card__link" href="#" data-stub-link>{content.mainHall}</a>
+      </Reveal>
+      <Reveal class="hall-card" delay={130}>
+        <img class="hall-card__image" src={`${assetBase}concert-assets/084-f97dddcf.webp`} alt={content.chamberHall} loading="lazy" />
+        <a class="hall-card__link" href="#" data-stub-link>{content.chamberHall}</a>
+      </Reveal>
+    </div>
+  </div>
+</section>

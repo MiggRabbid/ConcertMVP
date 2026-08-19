@@ -1,0 +1,92 @@
+---
+import type { Messages } from "../../app/i18n/messages";
+import { createConcertHref } from "../../app/lib/paths";
+import type { Locale, ProgramCategory } from "../../app/types/home";
+import EventCard from "../ui/EventCard.astro";
+import Reveal from "../ui/Reveal.astro";
+
+interface Props {
+  categories: ProgramCategory[];
+  assetBase: string;
+  locale: Locale;
+  messages: Messages;
+}
+
+const { categories, assetBase, locale, messages } = Astro.props;
+---
+
+<section class="programme" id="programme" data-programme>
+  <div class="programme__header page-shell">
+    <Reveal>
+      <p class="eyebrow">{messages.programme.title}</p>
+      <h2 class="programme__title">{messages.programme.all}</h2>
+    </Reveal>
+    <label class="programme__select">
+      <span class="sr-only">{messages.programme.choose}</span>
+      <select class="programme__select-control" data-programme-select>
+        <option value="all">{messages.programme.all}</option>
+        {categories.map((category) => <option value={category.id}>{category.title}</option>)}
+      </select>
+    </label>
+    <div class="programme__tabs" role="tablist" aria-label={messages.programme.choose}>
+      <button class="programme__tab programme__tab-active" type="button" role="tab" aria-selected="true" data-programme-tab="all">
+        {messages.programme.all}
+      </button>
+      {categories.map((category) => (
+        <button class="programme__tab" type="button" role="tab" aria-selected="false" data-programme-tab={category.id}>
+          {category.title}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="programme__body page-shell">
+    {categories.map((category, categoryIndex) => (
+      <section class="programme-group" id={`category-${category.id}`} data-programme-group={category.id}>
+        <Reveal>
+          <header class="programme-group__banner">
+            <img class="programme-group__image" src={category.image} alt={category.title} loading="lazy" />
+            <h3 class="programme-group__title">{category.title}</h3>
+            <p class="programme-group__period">{category.period}</p>
+          </header>
+        </Reveal>
+        <div class="event-grid">
+          {category.events.map((event, index) => (
+            <Reveal delay={(index % 3) * 110}>
+              <EventCard
+                {event}
+                href={createConcertHref(assetBase, locale, category.id, event.id)}
+                detailsLabel={messages.programme.eventDetails}
+              />
+            </Reveal>
+          ))}
+        </div>
+        {categoryIndex < categories.length - 1 && <div class="programme-group__divider" aria-hidden="true"></div>}
+      </section>
+    ))}
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-programme]").forEach((root) => {
+    const select = root.querySelector<HTMLSelectElement>("[data-programme-select]");
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-programme-tab]"));
+    const groups = Array.from(root.querySelectorAll<HTMLElement>("[data-programme-group]"));
+    if (!select) return;
+
+    const selectCategory = (categoryId: string) => {
+      select.value = categoryId;
+      tabs.forEach((tab) => {
+        const active = tab.dataset.programmeTab === categoryId;
+        tab.classList.toggle("programme__tab-active", active);
+        tab.setAttribute("aria-selected", String(active));
+      });
+      groups.forEach((group) => {
+        group.hidden = categoryId !== "all" && group.dataset.programmeGroup !== categoryId;
+      });
+    };
+
+    select.addEventListener("change", () => selectCategory(select.value));
+    tabs.forEach((tab) => tab.addEventListener("click", () => selectCategory(tab.dataset.programmeTab ?? "all")));
+  });
+</script>

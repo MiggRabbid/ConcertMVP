@@ -1,0 +1,59 @@
+---
+import type { Messages } from "../../app/i18n/messages";
+import { toIsoDate } from "../../app/lib/date";
+import type { ConcertPageData } from "../../app/types/concert";
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  data: ConcertPageData;
+  homeHref: string;
+  messages: Messages;
+}
+
+const { data, homeHref, messages } = Astro.props;
+const { event, project } = data;
+---
+
+<main class="concert-detail" id="top">
+  <a class="concert-detail__back" href={`${homeHref}#programme`}>
+    <Icon name="arrow-left" />
+    {messages.concert.back}
+  </a>
+
+  <div class="concert-detail__layout">
+    <div class="concert-detail__visual">
+      <img class="concert-detail__image" src={event.image} alt={event.title} fetchpriority="high" />
+    </div>
+
+    <article class="concert-detail__content">
+      <p class="concert-detail__project">{project.title}</p>
+      <h1 class="concert-detail__title">{event.title}</h1>
+
+      <dl class="concert-detail__facts">
+        <div class="concert-detail__fact">
+          <Icon name="calendar" class="concert-detail__fact-icon" />
+          <dt>{messages.concert.date}</dt>
+          <dd><time datetime={toIsoDate(event.date)}>{event.date}</time></dd>
+        </div>
+        <div class="concert-detail__fact">
+          <Icon name="clock" class="concert-detail__fact-icon" />
+          <dt>{messages.concert.time}</dt>
+          <dd>{event.time}</dd>
+        </div>
+        <div class="concert-detail__fact">
+          <Icon name="map-pin" class="concert-detail__fact-icon" />
+          <dt>{messages.concert.venue}</dt>
+          <dd>{event.venue}, {event.age}</dd>
+        </div>
+      </dl>
+
+      <section class="concert-detail__programme" aria-labelledby="concert-programme-title">
+        <h2 class="concert-detail__programme-title" id="concert-programme-title">{messages.concert.programme}</h2>
+        <p class="concert-detail__programme-name">{event.program}</p>
+        <p class="concert-detail__description">{event.description}</p>
+      </section>
+
+      <a class="primary-button" href="#" data-stub-link>{messages.common.tickets}</a>
+    </article>
+  </div>
+</main>

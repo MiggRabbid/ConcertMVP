@@ -1,0 +1,130 @@
+---
+import type { Messages } from "../../app/i18n/messages";
+import type { HeaderData, Locale } from "../../app/types/home";
+import type { LanguageLinks } from "../../app/types/layout";
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  data: HeaderData;
+  locale: Locale;
+  languageLinks: LanguageLinks;
+  messages: Messages;
+}
+
+const { data, locale, languageLinks, messages } = Astro.props;
+---
+
+<div data-site-header>
+  <header class="site-header">
+    <div class="site-header__address">
+      <Icon name="map-pin" class="site-header__address-icon" />
+      <span>{data.location}</span>
+    </div>
+    <a class="site-header__mark" href={data.homeHref} aria-label={messages.header.home}>
+      <img class="site-header__mark-image" src={data.logo} alt="" />
+    </a>
+    <div class="site-header__actions">
+      <nav class="locale-switch" aria-label={messages.header.language}>
+        <a
+          class:list={["locale-switch__option", { "locale-switch__option-active": locale === "en" }]}
+          href={languageLinks.en}
+          lang="en"
+          aria-current={locale === "en" ? "page" : undefined}
+        >EN</a>
+        <span>/</span>
+        <a
+          class:list={["locale-switch__option", { "locale-switch__option-active": locale === "ru" }]}
+          href={languageLinks.ru}
+          lang="ru"
+          aria-current={locale === "ru" ? "page" : undefined}
+        >RU</a>
+      </nav>
+      <button
+        class="menu-trigger"
+        type="button"
+        aria-label={messages.header.menu}
+        aria-expanded="false"
+        data-open-label={messages.header.menu}
+        data-close-label={messages.header.close}
+        data-menu-trigger
+      >
+        <span data-menu-open-icon><Icon name="menu" class="menu-trigger__icon" /></span>
+        <span data-menu-close-icon hidden><Icon name="x" class="menu-trigger__icon" /></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="menu-overlay" aria-hidden="true" data-menu-overlay>
+    <div class="menu-overlay__panel">
+      <nav class="menu-overlay__navigation" aria-label={messages.header.navigation}>
+        {data.navigation.map((item, index) => (
+          <a
+            href={item.href}
+            class="menu-overlay__link"
+            tabindex="-1"
+            style={`--menu-index: ${index}`}
+            data-menu-link
+          >
+            <span class="menu-overlay__index">0{index + 1}</span>
+            {item.label}
+          </a>
+        ))}
+      </nav>
+      <p class="menu-overlay__address">{data.location}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-site-header]").forEach((root) => {
+    const header = root.querySelector<HTMLElement>(".site-header");
+    const trigger = root.querySelector<HTMLButtonElement>("[data-menu-trigger]");
+    const overlay = root.querySelector<HTMLElement>("[data-menu-overlay]");
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>("[data-menu-link]"));
+    const openIcon = root.querySelector<HTMLElement>("[data-menu-open-icon]");
+    const closeIcon = root.querySelector<HTMLElement>("[data-menu-close-icon]");
+    if (!header || !trigger || !overlay || !openIcon || !closeIcon) return;
+
+    let menuOpen = false;
+    let previousOverflow = "";
+
+    const renderMenu = () => {
+      header.classList.toggle("site-header-menu-open", menuOpen);
+      overlay.classList.toggle("menu-overlay-open", menuOpen);
+      overlay.setAttribute("aria-hidden", String(!menuOpen));
+      trigger.setAttribute("aria-expanded", String(menuOpen));
+      trigger.setAttribute("aria-label", menuOpen ? trigger.dataset.closeLabel ?? "" : trigger.dataset.openLabel ?? "");
+      openIcon.hidden = menuOpen;
+      closeIcon.hidden = !menuOpen;
+      links.forEach((link) => { link.tabIndex = menuOpen ? 0 : -1; });
+
+      if (menuOpen) {
+        previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = previousOverflow;
+      }
+    };
+
+    const closeMenu = () => {
+      if (!menuOpen) return;
+      menuOpen = false;
+      renderMenu();
+    };
+
+    const updateHeader = () => {
+      header.classList.toggle("site-header-scrolled", window.scrollY > window.innerHeight * 0.82);
+    };
+
+    trigger.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      renderMenu();
+    });
+    links.forEach((link) => link.addEventListener("click", closeMenu));
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    updateHeader();
+  });
+</script>

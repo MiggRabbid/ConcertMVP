@@ -1,0 +1,48 @@
+---
+import { getMessages } from "../app/i18n/messages";
+import { toIsoDateTime } from "../app/lib/date";
+import type { ConcertPageData } from "../app/types/concert";
+import type { FooterData, HeaderData, Locale } from "../app/types/home";
+import type { LanguageLinks } from "../app/types/layout";
+import ConcertDetail from "../components/sections/ConcertDetail.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+interface Props {
+  locale: Locale;
+  assetBase: string;
+  header: HeaderData;
+  concert: ConcertPageData;
+  footer: FooterData;
+  languageLinks: LanguageLinks;
+}
+
+const { locale, assetBase, header, concert, footer, languageLinks } = Astro.props;
+const messages = getMessages(locale);
+const { event } = concert;
+const siteName = locale === "ru" ? "Концертный центр «Сириус»" : "Sirius Concert Centre";
+const title = `${event.title} — ${siteName}`;
+const description = event.description;
+const absoluteImage = new URL(event.image, Astro.site ?? Astro.url).toString();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicEvent",
+  name: event.title,
+  description: event.description,
+  image: absoluteImage,
+  startDate: toIsoDateTime(event.date, event.time),
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  eventStatus: "https://schema.org/EventScheduled",
+  location: {
+    "@type": "Place",
+    name: event.venue,
+    address: header.location.replace("\n", ", "),
+  },
+};
+---
+
+<BaseLayout {title} {description} {assetBase} lang={locale} {languageLinks} image={event.image} type="event" {jsonLd} {siteName}>
+  <SiteLayout {assetBase} {header} {footer} {locale} {languageLinks} {messages}>
+    <ConcertDetail data={concert} homeHref={header.homeHref} {messages} />
+  </SiteLayout>
+</BaseLayout>
